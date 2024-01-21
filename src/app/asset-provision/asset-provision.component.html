@@ -1,0 +1,56 @@
+<div class="flex h-100 h-screen items-center justify-center">
+  <div class="w-3/12 justify-center">
+    <div>
+      <p><span class="font-semibold">Asset ID:</span> {{ serialNumber }}</p>
+      <p><span class="font-semibold">Asset Name:</span> {{ assetName }}</p>
+      <p><span class="font-semibold">Fleet ID:</span> {{ fleetId }}</p>
+    </div>
+    <div></div>
+    <div class="flex items-center">
+      <mat-form-field class="my-3" appearance="fill">
+        <mat-label>Semi Provisioned Devices</mat-label>
+        <mat-select [formControl]="selectedSemiProvisionedDevice">
+          <mat-option
+            value="{{ device }}"
+            *ngFor="let device of lmSemiProvisionedDevices"
+            >{{ device }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-spinner
+        class="ml-2"
+        *ngIf="drivers.length === 0"
+        [diameter]="24"
+      ></mat-spinner>
+    </div>
+    <div class="flex items-center">
+      <mat-form-field class="my-3" appearance="fill">
+        <mat-label>Select Default Drivers</mat-label>
+        <mat-select [formControl]="selectedDriver">
+          <mat-option value="{{ driver.id }}" *ngFor="let driver of drivers"
+            >{{ driver.firstName }} {{ driver.lastName }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-spinner
+        class="ml-2"
+        *ngIf="drivers.length === 0"
+        [diameter]="24"
+      ></mat-spinner>
+    </div>
+    <div>
+      <button
+        [disabled]="
+          !(selectedDriver.value && selectedSemiProvisionedDevice.value)
+        "
+        (click)="onSubmit()"
+        mat-raised-button
+        color="primary"
+      >
+        Assign Asset
+      </button>
+    </div>
+  </div>
+
+  <!-- </form> -->
+</div>
