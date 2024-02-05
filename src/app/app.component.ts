@@ -3,7 +3,7 @@ import { GeotabApiService } from './geotab-api.service';
 import { LmApiService } from './lm-api.service';
 
 @Component({
-  selector: '[app-root]',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })

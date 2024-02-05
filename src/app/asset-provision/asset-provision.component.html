@@ -1,56 +1,151 @@
-<div class="flex h-100 h-screen items-center justify-center">
-  <div class="w-3/12 justify-center">
-    <div>
-      <p><span class="font-semibold">Asset ID:</span> {{ serialNumber }}</p>
-      <p><span class="font-semibold">Asset Name:</span> {{ assetName }}</p>
-      <p><span class="font-semibold">Fleet ID:</span> {{ fleetId }}</p>
-    </div>
-    <div></div>
-    <div class="flex items-center">
-      <mat-form-field class="my-3" appearance="fill">
-        <mat-label>Semi Provisioned Devices</mat-label>
-        <mat-select [formControl]="selectedSemiProvisionedDevice">
-          <mat-option
-            value="{{ device }}"
-            *ngFor="let device of lmSemiProvisionedDevices"
-            >{{ device }}</mat-option
+<div class="flex rounded asset-container p-4 mx-5 mt-5 border-solid border">
+  <div class="w-6/12">
+    <span class="font-medium text-lg">Information</span>
+    <p>
+      Basic details related to the asset with an option to change duty type and
+      default driver.
+    </p>
+  </div>
+  <div class="w-6/12">
+    <form class="flex w-full flex-wrap">
+      <div class="w-6/12 px-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Asset ID</mat-label>
+          <input
+            matInput
+            placeholder="Asset ID"
+            disabled
+            [value]="serialNumber"
+          />
+        </mat-form-field>
+      </div>
+      <div class="w-6/12 px-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Device ID</mat-label>
+          <mat-select [formControl]="selectedSemiProvisionedDevice">
+            <mat-option value="">--- None ---</mat-option>
+            <mat-option
+              [value]="device"
+              *ngFor="let device of lmSemiProvisionedDevices"
+              >{{ device }}</mat-option
+            >
+          </mat-select>
+          <!-- <input
+            type="text"
+            matInput
+            aria-label="Device ID"
+            [formControl]="selectedSemiProvisionedDevice"
+            placeholder="Select Device"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            [displayWith]="displayFnDevice"
           >
-        </mat-select>
-      </mat-form-field>
-      <mat-spinner
-        class="ml-2"
-        *ngIf="drivers.length === 0"
-        [diameter]="24"
-      ></mat-spinner>
-    </div>
-    <div class="flex items-center">
-      <mat-form-field class="my-3" appearance="fill">
-        <mat-label>Select Default Drivers</mat-label>
-        <mat-select [formControl]="selectedDriver">
-          <mat-option value="{{ driver.id }}" *ngFor="let driver of drivers"
-            >{{ driver.firstName }} {{ driver.lastName }}</mat-option
+            <mat-option
+              *ngFor="let option of filteredSelectedDevices | async"
+              [value]="option"
+            >
+              {{ option.id }}
+            </mat-option>
+          </mat-autocomplete> -->
+        </mat-form-field>
+      </div>
+      <div class="w-6/12 px-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Duty Type</mat-label>
+          <mat-select [disabled]="!deviceId" [formControl]="dutyType">
+            <mat-option
+              *ngFor="let option of availableDutyTypes"
+              [value]="option.value"
+              >{{ option.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="w-6/12 px-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Driver ID</mat-label>
+          <input
+            type="text"
+            matInput
+            aria-label="Driver ID"
+            [formControl]="myControl"
+            placeholder="Select Driver"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            [displayWith]="displayFn"
           >
-        </mat-select>
-      </mat-form-field>
-      <mat-spinner
-        class="ml-2"
-        *ngIf="drivers.length === 0"
-        [diameter]="24"
-      ></mat-spinner>
-    </div>
-    <div>
-      <button
-        [disabled]="
-          !(selectedDriver.value && selectedSemiProvisionedDevice.value)
-        "
-        (click)="onSubmit()"
-        mat-raised-button
-        color="primary"
-      >
-        Assign Asset
-      </button>
-    </div>
+            <mat-option
+              *ngFor="let option of filteredOptions | async"
+              [value]="option"
+            >
+              {{ option.firstName }} {{ option.lastName }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="w-6/12 px-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Recurring Live Stream Minutes</mat-label>
+          <input
+            matInput
+            placeholder="Live Stream Minutes"
+            [value]="recurringLivestreamExtraMinutes"
+          />
+        </mat-form-field>
+      </div>
+      <!-- ?? - will this be a select or an input -->
+      <div class="w-6/12 px-4">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Package</mat-label>
+          <input
+            matInput
+            placeholder="Select Package"
+            [value]="ridecamPlusPlan"
+          />
+        </mat-form-field>
+      </div>
+    </form>
   </div>
 
-  <!-- </form> -->
+  <ng-template #loadingAssetDetails>
+    <section
+      class="container loading-shade"
+      fxLayout="column"
+      fxLayoutGap="24px"
+      fxLayoutAlign="center center"
+    >
+      <mat-spinner></mat-spinner>
+      <div>{{ "EditAssetLoadingDetails" | translate }}</div>
+    </section>
+  </ng-template>
+</div>
+
+<div style="justify-content: end" class="flex mx-5 mt-5">
+  <span>
+    <button
+      [disabled]="updatingAsset"
+      (click)="onSubmit()"
+      type="button"
+      mat-flat-button
+      color="primary"
+    >
+      <span *ngIf="!updatingAsset; else templateName">Save Details</span>
+      <ng-template #templateName>
+        <div class="flex items-center">
+          <span>Updating</span>
+          <mat-spinner
+            class="ml-2"
+            *ngIf="drivers.length === 0"
+            [diameter]="24"
+          ></mat-spinner>
+        </div>
+      </ng-template>
+    </button>
+  </span>
 </div>

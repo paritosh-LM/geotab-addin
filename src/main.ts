@@ -8,15 +8,14 @@ if (environment.production) {
   enableProdMode();
 }
 
-// platformBrowserDynamic().bootstrapModule(AppModule)
-//   .catch(err => console.error(err));
-
-try {
-  document.addEventListener('DOMContentLoaded', () => {
+if (window.location.href.includes('localhost')) {
+  platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch((err) => console.error(err));
+} else {
+  window.addEventListener('geoTabLoaded', () => {
     platformBrowserDynamic()
       .bootstrapModule(AppModule)
       .catch((err) => console.error(err));
   });
-} catch (error) {
-  console.error('error', error);
 }

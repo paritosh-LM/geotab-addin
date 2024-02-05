@@ -18,14 +18,14 @@ export class GeotabApiService {
   }
 
   constructor(private httpClient: HttpClient) {
-    const authentication = {
-      credentials: {
-        database: 'lmfleet003',
-        userName: 'paritosh.k@lightmetrics.co',
-        password: '3pT%mjuLMtQf#ny', // todo - keep this secret or make the geotab api calls on the intermediate server and then serve the data
-      },
-      path: 'my.geotab.com',
-    };
+    // const authentication = {
+    //   credentials: {
+    //     database: 'lmfleet003',
+    //     userName: 'paritosh.k@lightmetrics.co',
+    //     password: '3pT%mjuLMtQf#ny', // todo - keep this secret or make the geotab api calls on the intermediate server and then serve the data
+    //   },
+    //   path: 'my.geotab.com',
+    // };
     // this.geotab = new GeotabApi(authentication);
   }
 
@@ -69,7 +69,7 @@ export class GeotabApiService {
     });
   }
 
-  public getDeviceDetails(deviceId: string): Observable<any> {
+  public getDeviceDetails(deviceId: string | null): Observable<any> {
     return this.httpClient.post('https://my.geotab.com/apiv1', {
       method: 'Get',
       params: {

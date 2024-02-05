@@ -1,36 +1,46 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "module": "esnext",
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
     "moduleResolution": "node",
-    "importHelpers": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "target": "es2020",
-    "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ]
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/types/**/*.d.ts"
-  ]
+    "typeRoots": ["src/typings.d.ts", "node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "paths": {
+      "@assets/*":["https://d1zwmc73sycwjn.cloudfront.net/fleet-portal-2/assets/*"],
+      "@env/*": ["src/environments/*"],
+      "@app-core/*": ["src/app/core/*"],
+      "@app-auth/*": ["src/app/authentication/*"],
+      "@app-shared/*": ["src/app/shared/*"],
+      "@app-home/*": ["src/app/home/*"],
+      "@app-trips/*": ["src/app/trips/*"],
+      "@app-incidents/*": ["src/app/incidents/*"],
+      "@app-live-view/*": ["src/app/live-view/*"],
+      "@app-coaching/*": ["src/app/coaching/*"],
+      "@app-dvr/*": ["src/app/dvr/*"],
+      "@app-challenged/*": ["src/app/challenged/*"],
+      "@app-reports/*": ["src/app/reports/*"],
+      "@app-user-management/*": ["src/app/user-management/*"],
+      "@app-assets/*": ["src/app/assets/*"],
+      "@app-asset-config/*": ["src/app/asset-configuration/*"],
+      "@app-user-config/*": ["src/app/user-configuration/*"],
+      "@app-driver-management/*": ["src/app/driver-management/*"],
+      "@app-diagnostics/*": ["src/app/diagnostics/*"],
+      "@app-trip-details/*": ["src/app/trip-details/*"],
+      "@app-incident-details/*": ["src/app/incident-details/*"],
+      "@app-request-video/*": ["src/app/request-video/*"],
+      "@config/*": ["src/config/*"]
+    }
+  }
 }

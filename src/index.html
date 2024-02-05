@@ -1,35 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>GeotabAddin</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script>
-    geotab.addin.myRideViewAssetProvision = function (api, state) {
-        console.log('variabe assignemend')
-        console.log(document.getElementById('root'))
-        return {
-                initialize: function(api, state, callback) {
-                  console.log('init')
-                  console.log(document.getElementById('root'))
-                    callback();
-                },
-                focus: function(api, state) {
-                   console.log('focus')
-                },
-                blur: function(api, state) {
-                  console.log('blur')
-                }
-            }
-    }
-  </script>
-</head>
-<body class="mat-typography">
-  <div app-root id="root"></div app-root>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>GeotabAddin</title>
+    <base href="/test" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script>
+      if (!window.location.href.includes("localhost"))
+        geotab.addin.myRideViewAssetProvision = (api, state) => {
+          console.log("variabe assignemend");
+          console.log(document.getElementById("root"));
+
+          const storeAssetInfo = async () => {
+            const url = await state.page.get();
+            localStorage.setItem("url", JSON.stringify(url));
+            localStorage.setItem("urlId", url.id);
+          };
+
+          window.dispatchEvent(
+            new CustomEvent("geoTabLoaded", { detail: { api: api } })
+          );
+
+          const onFocus = () => {
+            storeAssetInfo();
+            console.log("myRideViewAssetProvision focus");
+
+            console.log(document.getElementById("root"));
+          };
+
+          storeAssetInfo();
+          const onBlur = () => {
+            console.log("myRideViewAssetProvision blur");
+          };
+
+          const onStateChange = () => {
+            console.log("myRideViewAssetProvision stateChange");
+          };
+          // state.page.attach("initialize", () => console.log("init"));
+          state.page.attach("focus", onFocus);
+          state.page.attach("blur", onBlur);
+          state.page.attach("stateChange", onStateChange);
+        };
+    </script>
+  </head>
+  <body class="mat-typography">
+    <app-root></app-root>
+    <script></script>
+  </body>
 </html>
